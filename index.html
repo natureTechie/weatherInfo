@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Info App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <!-- Weather Background Container -->
+  <div id="weatherBackground" class="weather-background"></div>
+  
+  <!-- Advanced Animation Particles -->
+  <div class="particle-system">
+    <div class="particle particle-1">🌤️</div>
+    <div class="particle particle-2">☁️</div>
+    <div class="particle particle-3">🌤️</div>
+    <div class="particle particle-4">⛅</div>
+    <div class="particle particle-5">🌥️</div>
+    <div class="particle particle-6">🌈</div>
+    <div class="particle particle-7">✨</div>
+    <div class="particle particle-8">⭐</div>
+    <div class="particle particle-9">🌟</div>
+    <div class="particle particle-10">💫</div>
+  </div>
+  
+  <!-- Welcome Modal -->
+  <div id="welcomeModal" class="welcome-modal">
+    <!-- Animated Background Elements -->
+    <div class="welcome-particles">
+      <div class="particle particle-1">☀️</div>
+      <div class="particle particle-2">☁️</div>
+      <div class="particle particle-3">🌤️</div>
+      <div class="particle particle-4">⛅</div>
+      <div class="particle particle-5">🌥️</div>
+      <div class="particle particle-6">🌈</div>
+    </div>
+    
+    <div class="welcome-content glass-effect animated-content">
+      <div class="welcome-header">
+        <div class="welcome-icon-container">
+          <i class="fas fa-cloud-sun welcome-icon weather-icon-3d floating-icon"></i>
+          <div class="icon-glow"></div>
+        </div>
+        <h1 class="welcome-title typing-text">Welcome to Weather Info!</h1>
+        <div class="welcome-subtitle">Your personal weather companion</div>
+      </div>
+      
+      <div class="welcome-form">
+        <div class="input-container">
+          <label for="userName" class="animated-label">What's your name?</label>
+          <div class="input-wrapper">
+            <input type="text" id="userName" placeholder="Enter your name..." maxlength="30" class="animated-input" />
+            <div class="input-glow"></div>
+          </div>
+        </div>
+        <button onclick="submitName()" id="submitNameBtn" class="animated-button">
+          <i class="fas fa-arrow-right"></i> Get Started
+          <div class="button-glow"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Container -->
+  <div class="container parallax-container" id="mainContainer">
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+      <button id="themeToggle" onclick="toggleTheme()" class="theme-btn glass-effect">
+        <i class="fas fa-sun" id="themeIcon"></i>
+        <span id="themeText">Light Mode</span>
+      </button>
+    </div>
+
+    <div class="greeting-section animated-greeting">
+      <div class="greeting-header">
+        <div class="main-weather-icon">
+          <div class="weather-icon-container">
+            <i class="fas fa-cloud-sun main-icon floating-weather-icon"></i>
+            <div class="icon-glow-effect"></div>
+            <div class="sun-rays"></div>
+            <div class="time-effects">
+              <div class="day-effect">
+                <div class="sun-ray ray-1"></div>
+                <div class="sun-ray ray-2"></div>
+                <div class="sun-ray ray-3"></div>
+                <div class="sun-ray ray-4"></div>
+              </div>
+              <div class="evening-effect">
+                <div class="star star-1">✨</div>
+                <div class="star star-2">⭐</div>
+                <div class="star star-3">🌟</div>
+              </div>
+              <div class="night-effect">
+                <div class="moon-glow"></div>
+                <div class="star star-1">⭐</div>
+                <div class="star star-2">✨</div>
+                <div class="star star-3">🌟</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="title-container">
+          <h1 id="greetingText" class="animated-title">Weather Info</h1>
+          <div class="title-glow"></div>
+        </div>
+      </div>
+      <div class="greeting-container">
+        <p id="userGreeting" class="user-greeting animated-greeting-text"></p>
+        <div class="time-indicator">
+          <span class="time-emoji" id="timeEmoji">🌙</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-section">
+      <input type="text" id="cityInput" placeholder="Enter city name (e.g., London)" />
+      <button onclick="getWeather()" id="searchBtn">
+        <i class="fas fa-search"></i> Get Weather
+      </button>
+      <button onclick="getCurrentLocation()" id="locationBtn">
+        <i class="fas fa-location-arrow"></i> <span id="locationBtnText">My Location</span>
+      </button>
+      <button onclick="openWeatherMaps()" id="mapsBtn" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; margin-left: 10px;">
+        <i class="fas fa-map"></i> Open Weather Maps
+      </button>
+      
+
+    </div>
+
+    <div class="unit-toggle">
+      <label>
+        <input type="radio" name="unit" value="metric" checked> Celsius
+      </label>
+      <label>
+        <input type="radio" name="unit" value="imperial"> Fahrenheit
+      </label>
+    </div>
+
+    <div id="loadingSpinner" class="loading-spinner hidden" style="display: none;">
+      <div class="spinner"></div>
+      <p id="loadingText">Scanning weather data...</p>
+    </div>
+
+    <!-- Time Display Section -->
+    <div id="timeDisplay" class="time-display hidden glass-effect scroll-animate-bounce">
+      <div class="time-header">
+        <h3><i class="fas fa-clock"></i> Current Time</h3>
+        <div class="time-controls">
+          <div class="format-toggle">
+            <label class="toggle-label">
+              <input type="checkbox" id="timeFormatToggle" />
+              <span class="toggle-slider"></span>
+              <span class="toggle-text">24h</span>
+            </label>
+          </div>
+          <div class="timezone-selector">
+            <select id="timezoneSelect" class="timezone-dropdown">
+              <option value="local">Local Time</option>
+              <option value="UTC">UTC (Coordinated Universal Time)</option>
+              <option value="GMT">GMT (Greenwich Mean Time)</option>
+              <option value="EST">EST (Eastern Standard Time)</option>
+              <option value="CST">CST (Central Standard Time)</option>
+              <option value="MST">MST (Mountain Standard Time)</option>
+              <option value="PST">PST (Pacific Standard Time)</option>
+              <option value="AST">AST (Atlantic Standard Time)</option>
+              <option value="HST">HST (Hawaii Standard Time)</option>
+              <option value="CET">CET (Central European Time)</option>
+              <option value="EET">EET (Eastern European Time)</option>
+              <option value="WET">WET (Western European Time)</option>
+              <option value="IST">IST (India Standard Time)</option>
+              <option value="JST">JST (Japan Standard Time)</option>
+              <option value="KST">KST (Korea Standard Time)</option>
+              <option value="CST_CN">CST (China Standard Time)</option>
+              <option value="SGT">SGT (Singapore Time)</option>
+              <option value="AEST">AEST (Australian Eastern Time)</option>
+              <option value="ACST">ACST (Australian Central Time)</option>
+              <option value="AWST">AWST (Australian Western Time)</option>
+              <option value="NZST">NZST (New Zealand Standard Time)</option>
+              <option value="SAST">SAST (South Africa Standard Time)</option>
+              <option value="EAT">EAT (East Africa Time)</option>
+              <option value="WAT">WAT (West Africa Time)</option>
+              <option value="BRT">BRT (Brazil Time)</option>
+              <option value="ART">ART (Argentina Time)</option>
+              <option value="CLT">CLT (Chile Time)</option>
+              <option value="PET">PET (Peru Time)</option>
+              <option value="MST_MX">MST (Mexico Standard Time)</option>
+              <option value="COT">COT (Colombia Time)</option>
+              <option value="VET">VET (Venezuela Time)</option>
+              <option value="GST">GST (Gulf Standard Time)</option>
+              <option value="MSK">MSK (Moscow Time)</option>
+              <option value="YEKT">YEKT (Yekaterinburg Time)</option>
+              <option value="OMST">OMST (Omsk Time)</option>
+              <option value="KRAT">KRAT (Krasnoyarsk Time)</option>
+              <option value="IRKT">IRKT (Irkutsk Time)</option>
+              <option value="YAKT">YAKT (Yakutsk Time)</option>
+              <option value="VLAT">VLAT (Vladivostok Time)</option>
+              <option value="MAGT">MAGT (Magadan Time)</option>
+              <option value="ANAT">ANAT (Anadyr Time)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="time-content">
+        <div class="time-main">
+          <div class="time-digits" id="timeDigits">
+            <span class="hour" id="hourDisplay">--</span>
+            <span class="time-separator">:</span>
+            <span class="minute" id="minuteDisplay">--</span>
+            <span class="time-separator">:</span>
+            <span class="second" id="secondDisplay">--</span>
+            <span class="period" id="periodDisplay"></span>
+          </div>
+          <div class="time-date" id="dateDisplay">Loading...</div>
+        </div>
+        
+        <div class="time-info">
+          <div class="timezone-info" id="timezoneInfo">
+            <i class="fas fa-globe"></i>
+            <span id="currentTimezone">Local Time</span>
+          </div>
+          <div class="day-info" id="dayInfo">
+            <i class="fas fa-calendar-day"></i>
+            <span id="dayName">--</span>
+          </div>
+        </div>
+        
+        <div class="time-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="timeProgress"></div>
+          </div>
+          <div class="progress-text" id="progressText">0% of day completed</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="weatherResult" class="weather-card hidden glass-effect scroll-animate-bounce"></div>
+    
+    <!-- Weather Tips Section -->
+    <div id="weatherTips" class="weather-tips hidden glass-effect scroll-animate-left">
+      <h3><i class="fas fa-lightbulb"></i> Weather Tips</h3>
+      <div id="tipsContent" class="tips-content"></div>
+        </div>
+    
+    <!-- Weather Enhancements Section -->
+    <div id="weatherEnhancements" class="weather-enhancements hidden glass-effect scroll-animate-scale">
+      <h3><i class="fas fa-magic"></i> Weather Experience</h3>
+      <p class="enhancements-description">Immerse yourself in the weather with sounds, music, quotes, and achievements!</p>
+      <!-- Weather enhancements content will be populated by JavaScript -->
+    </div>
+    
+    <!-- Smart Features Section -->
+    <div id="smartFeatures" class="smart-features hidden glass-effect scroll-animate-flip">
+      <h3><i class="fas fa-brain"></i> Smart Features</h3>
+      <p class="smart-description">AI-powered weather insights and personalized recommendations</p>
+      
+      <!-- Smart Recommendations -->
+      <div class="smart-section">
+        <h4><i class="fas fa-lightbulb"></i> Smart Recommendations</h4>
+        <div class="recommendations-grid" id="smartRecommendations">
+          <!-- Recommendations will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Favorite Cities -->
+      <div class="smart-section">
+        <h4><i class="fas fa-heart"></i> Favorite Cities</h4>
+        <div class="favorites-controls">
+          <button onclick="addToFavorites()" class="favorite-btn" id="addFavoriteBtn">
+            <i class="fas fa-plus"></i> Add Current City
+          </button>
+          <button onclick="manageFavorites()" class="favorite-btn">
+            <i class="fas fa-cog"></i> Manage Favorites
+          </button>
+        </div>
+        <div class="favorites-grid" id="favoritesGrid">
+          <!-- Favorite cities will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Weather Comparison -->
+      <div class="smart-section">
+        <h4><i class="fas fa-balance-scale"></i> Weather Comparison</h4>
+        <div class="comparison-controls">
+          <div class="comparison-inputs">
+            <input type="text" id="city1Input" placeholder="Enter first city..." class="comparison-input">
+            <input type="text" id="city2Input" placeholder="Enter second city..." class="comparison-input">
+            <button onclick="compareCities()" class="compare-btn">
+              <i class="fas fa-search"></i> Compare
+            </button>
+          </div>
+        </div>
+        <div class="comparison-results" id="comparisonResults">
+          <!-- Comparison results will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Travel Planning -->
+      <div class="smart-section">
+        <h4><i class="fas fa-plane"></i> Travel Planning</h4>
+        <div class="travel-controls">
+          <div class="travel-inputs">
+            <input type="text" id="destinationInput" placeholder="Enter destination city..." class="travel-input">
+            <input type="date" id="travelDateInput" class="travel-input">
+            <button onclick="planTravel()" class="travel-btn">
+              <i class="fas fa-route"></i> Plan Trip
+            </button>
+          </div>
+        </div>
+        <div class="travel-results" id="travelResults">
+          <!-- Travel planning results will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Weather History -->
+      <div class="smart-section">
+        <h4><i class="fas fa-history"></i> Weather History</h4>
+        <div class="history-controls">
+          <select id="historyCitySelect" class="history-select">
+            <option value="">Select a city...</option>
+          </select>
+          <select id="historyPeriodSelect" class="history-select">
+            <option value="7">Last 7 days</option>
+            <option value="30">Last 30 days</option>
+            <option value="90">Last 3 months</option>
+          </select>
+          <button onclick="loadWeatherHistory()" class="history-btn">
+            <i class="fas fa-chart-line"></i> Load History
+          </button>
+        </div>
+        <div class="history-results" id="historyResults">
+          <!-- Weather history will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Weather Charts Section -->
+    <div id="weatherCharts" class="weather-charts hidden glass-effect scroll-animate-right">
+      <h3><i class="fas fa-chart-line"></i> Weather Analytics</h3>
+      <p class="charts-description">Interactive charts showing weather trends and patterns</p>
+      
+      <div class="charts-controls">
+        <button onclick="showTemperatureChart()" class="chart-btn active" id="tempChartBtn">
+          <i class="fas fa-thermometer-half"></i> Temperature
+        </button>
+        <button onclick="showHumidityChart()" class="chart-btn" id="humidityChartBtn">
+          <i class="fas fa-tint"></i> Humidity
+        </button>
+        <button onclick="showWindChart()" class="chart-btn" id="windChartBtn">
+          <i class="fas fa-wind"></i> Wind Speed
+        </button>
+        <button onclick="showPressureChart()" class="chart-btn" id="pressureChartBtn">
+          <i class="fas fa-compress-arrows-alt"></i> Pressure
+        </button>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="weatherChart" width="400" height="200"></canvas>
+      </div>
+
+      <div class="chart-info">
+        <div class="chart-stats">
+          <div class="stat-item">
+            <span class="stat-label">Average</span>
+            <span class="stat-value" id="avgValue">--</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">High</span>
+            <span class="stat-value" id="highValue">--</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Low</span>
+            <span class="stat-value" id="lowValue">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Weather Widgets Section -->
+    <div id="weatherWidgets" class="weather-widgets hidden glass-effect scroll-animate-bounce">
+      <h3><i class="fas fa-share-alt"></i> Weather Widgets</h3>
+      <p class="widget-description">Create beautiful weather cards to share on your website or social media!</p>
+      
+      <div class="widget-controls">
+        <button onclick="createWidget()" class="widget-btn">
+          <i class="fas fa-plus"></i> Create Widget
+        </button>
+        <button onclick="downloadWidget()" class="widget-btn" id="downloadBtn" disabled>
+          <i class="fas fa-download"></i> Download Widget
+        </button>
+      </div>
+
+      <div class="widget-preview" id="widgetPreview">
+        <h4>Widget Preview</h4>
+        <div id="widgetCard" class="widget-card">
+          <div class="widget-placeholder">
+            <i class="fas fa-cloud-sun"></i>
+            <p>Click "Create Widget" to generate a weather widget</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="widget-info" id="widgetInfo" style="display: none;">
+        <div class="info-card">
+          <h4><i class="fas fa-image"></i> Widget Ready!</h4>
+          <p>Your animated weather widget has been created successfully. You can now download it as a PNG image and share it anywhere!</p>
+          <div class="info-steps">
+            <div class="step">
+              <span class="step-number">1</span>
+              <span>Click "Download Widget" to save the PNG image</span>
+            </div>
+            <div class="step">
+              <span class="step-number">2</span>
+              <span>Share the image on social media, websites, or messaging apps</span>
+            </div>
+            <div class="step">
+              <span class="step-number">3</span>
+              <span>The widget includes beautiful animations and weather data</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Sharing Section -->
+    <div id="socialSharing" class="social-sharing hidden glass-effect scroll-animate-scale">
+      <h3><i class="fas fa-share-alt"></i> Share Weather</h3>
+      <p class="sharing-description">Share your weather experience with friends and family!</p>
+      
+      <div class="sharing-container">
+        <div class="weather-summary" id="weatherSummary">
+          <div class="summary-icon">
+            <i class="fas fa-cloud-sun"></i>
+          </div>
+          <div class="summary-text">
+            <h4 id="summaryLocation">Location</h4>
+            <p id="summaryWeather">Weather description</p>
+            <div class="summary-temp" id="summaryTemp">--°C</div>
+          </div>
+        </div>
+        
+        <div class="social-buttons">
+          <button class="share-btn twitter-btn" onclick="shareToTwitter()">
+            <i class="fab fa-twitter"></i>
+            <span>Twitter</span>
+            <div class="btn-glow"></div>
+          </button>
+          
+          <button class="share-btn facebook-btn" onclick="shareToFacebook()">
+            <i class="fab fa-facebook-f"></i>
+            <span>Facebook</span>
+            <div class="btn-glow"></div>
+          </button>
+          
+          <button class="share-btn whatsapp-btn" onclick="shareToWhatsApp()">
+            <i class="fab fa-whatsapp"></i>
+            <span>WhatsApp</span>
+            <div class="btn-glow"></div>
+          </button>
+          
+          <button class="share-btn telegram-btn" onclick="shareToTelegram()">
+            <i class="fab fa-telegram-plane"></i>
+            <span>Telegram</span>
+            <div class="btn-glow"></div>
+          </button>
+          
+          <button class="share-btn copy-btn" onclick="copyToClipboard()">
+            <i class="fas fa-copy"></i>
+            <span>Copy Link</span>
+            <div class="btn-glow"></div>
+          </button>
+          
+          <button class="share-btn email-btn" onclick="shareViaEmail()">
+            <i class="fas fa-envelope"></i>
+            <span>Email</span>
+            <div class="btn-glow"></div>
+          </button>
+        </div>
+        
+        <div class="share-message" id="shareMessage">
+          <i class="fas fa-check-circle"></i>
+          <span>Link copied to clipboard!</span>
+        </div>
+      </div>
+    </div>
+    
+    <div id="forecastResult" class="forecast-section hidden glass-effect scroll-animate-scale"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
