@@ -1,2 +1,2 @@
-﻿# EnvStat - Know your weather
+﻿# EnvStat - Weather at your glance!
  Internship Project
